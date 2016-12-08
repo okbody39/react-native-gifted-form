@@ -44,6 +44,7 @@ module.exports = React.createClass({
       height: 120,
       borderBottomWidth: 1 / PixelRatio.get(),
       borderColor: '#c8c7cc',
+      justifyContent: 'center',
       alignItems: 'center',
       paddingLeft: 10,
       paddingRight: 10,
