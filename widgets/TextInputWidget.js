@@ -80,6 +80,7 @@ module.exports = React.createClass({
           {this._renderTitle()}
           <TextInput
             ref='input'
+            underlineColorAndroid='rgba(0, 0, 0, 0)'
             style={this.getStyle(['textInputInline'])}
 
             {...this.props}
@@ -186,7 +187,6 @@ module.exports = React.createClass({
       flex: 1,
       height: 40,// @todo should be changed if underlined
       marginTop: 2,
-      underlineColorAndroid: 'rgba(0, 0, 0, 0)',
     },
     textInputTitleInline: {
       width: 110,
