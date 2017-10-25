@@ -6,6 +6,7 @@ const ContainerMixin = require('./mixins/ContainerMixin');
 const WidgetMixin = require('./mixins/WidgetMixin');
 
 const TextInputWidget = require('./widgets/TextInputWidget');
+const TextMaskedInputWidget = require('./widgets/TextMaskedInputWidget');
 const TextAreaWidget = require('./widgets/TextAreaWidget');
 const SwitchWidget = require('./widgets/SwitchWidget');
 const SelectWidget = require('./widgets/SelectWidget');
@@ -20,17 +21,19 @@ const NoticeWidget = require('./widgets/NoticeWidget');
 const ValidationErrorWidget = require('./widgets/ValidationErrorWidget');
 const GooglePlacesWidget = require('./widgets/GooglePlacesWidget');
 const RowWidget = require('./widgets/RowWidget');
+const RowValueWidget = require('./widgets/RowValueWidget');
 const LoadingWidget = require('./widgets/LoadingWidget');
 const HiddenWidget = require('./widgets/HiddenWidget');
 const ErrorsWidget = require('./widgets/ErrorsWidget');
-const ImageWidget = require('./widgets/ImageWidget');
-const CustomWidget = require('./widgets/CustomWidget');
+const ButtonWidget = require('./widgets/ButtonWidget');
+const KoreanAddressWidget = require('./widgets/KoreanAddressWidget');
 
 const GiftedForm = React.createClass({
   mixins: [ ContainerMixin ],
 
   statics: {
     TextInputWidget,
+    TextMaskedInputWidget,
     TextAreaWidget,
     SwitchWidget,
     SelectWidget,
@@ -44,12 +47,13 @@ const GiftedForm = React.createClass({
     NoticeWidget,
     GooglePlacesWidget,
     RowWidget,
+    RowValueWidget,
     LoadingWidget,
     HiddenWidget,
     ValidationErrorWidget,
     ErrorsWidget,
-    ImageWidget,
-    CustomWidget,
+    ButtonWidget,
+    KoreanAddressWidget,
   },
 
   getDefaultProps() {

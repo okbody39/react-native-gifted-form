@@ -1,32 +1,27 @@
 # Gifted Form
-Form component for React-Native
 
+[![npm downloads](https://img.shields.io/npm/dm/react-native-gifted-form.svg)](https://www.npmjs.com/package/react-native-gifted-form)
+[![npm version](https://img.shields.io/npm/v/react-native-gifted-form.svg)](https://www.npmjs.com/package/react-native-gifted-form)
+[![Latest GitHub tag](https://img.shields.io/github/tag/FaridSafi/react-native-gifted-form.svg)](https://github.com/FaridSafi/react-native-gifted-form)
 
-![](https://raw.githubusercontent.com/FaridSafi/react-native-gifted-form/master/capture/signup.gif)
+Form component for React Native.
 
-### Changelog
-
-#### 0.0.7
-- SelectDayWidget, CellWidget and DayPickerWidget are now deprecated and will be replaced by DatePickerWidget
-
+![screenshot](https://raw.githubusercontent.com/FaridSafi/react-native-gifted-form/master/capture/signup.gif)
 
 ### Example
 
 ```js
-var {GiftedForm, GiftedFormManager} = require('react-native-gifted-form');
+var { GiftedForm, GiftedFormManager } = require('react-native-gifted-form');
 
-var Component = React.createClass({
+var FormComponent = React.createClass({
   render() {
     return (
       <GiftedForm
         formName='signupForm' // GiftedForm instances that use the same name will also share the same states
-
         openModal={(route) => {
           navigator.push(route); // The ModalWidget will be opened using this method. Tested with ExNavigator
         }}
-
         clearOnClose={false} // delete the values of the form when unmounted
-
         defaults={{
           /*
           username: 'Farid',
@@ -36,7 +31,6 @@ var Component = React.createClass({
           birthday: new Date(((new Date()).getFullYear() - 18)+''),
           */
         }}
-
         validators={{
           fullName: {
             title: 'Full name',
@@ -117,27 +111,22 @@ var Component = React.createClass({
           },
         }}
       >
-
         <GiftedForm.SeparatorWidget />
+
         <GiftedForm.TextInputWidget
           name='fullName' // mandatory
           title='Full name'
-
           image={require('../../assets/icons/color/user.png')}
-
           placeholder='Marco Polo'
           clearButtonMode='while-editing'
         />
-
 
         <GiftedForm.TextInputWidget
           name='username'
           title='Username'
           image={require('../../assets/icons/color/contact_card.png')}
-
           placeholder='MarcoPolo'
           clearButtonMode='while-editing'
-
           onTextInputFocus={(currentText = '') => {
             if (!currentText) {
               let fullName = GiftedFormManager.getValue('signupForm', 'fullName');
@@ -152,10 +141,7 @@ var Component = React.createClass({
         <GiftedForm.TextInputWidget
           name='password' // mandatory
           title='Password'
-
           placeholder='******'
-
-
           clearButtonMode='while-editing'
           secureTextEntry={true}
           image={require('../../assets/icons/color/lock.png')}
@@ -165,11 +151,8 @@ var Component = React.createClass({
           name='emailAddress' // mandatory
           title='Email address'
           placeholder='example@nomads.ly'
-
           keyboardType='email-address'
-
           clearButtonMode='while-editing'
-
           image={require('../../assets/icons/color/email.png')}
         />
 
@@ -192,25 +175,24 @@ var Component = React.createClass({
           title='Birthday'
           displayValue='birthday'
           image={require('../../assets/icons/color/birthday.png')}
-
           scrollEnabled={false}
         >
           <GiftedForm.SeparatorWidget/>
+
           <GiftedForm.DatePickerIOSWidget
             name='birthday'
             mode='date'
-
             getDefaultDate={() => {
               return new Date(((new Date()).getFullYear() - 18)+'');
             }}
           />
         </GiftedForm.ModalWidget>
+
         <GiftedForm.ModalWidget
           title='Country'
           displayValue='country'
           image={require('../../assets/icons/color/passport.png')}
           scrollEnabled={false}
-
         >
           <GiftedForm.SelectCountryWidget
             code='alpha2'
@@ -220,26 +202,22 @@ var Component = React.createClass({
           />
         </GiftedForm.ModalWidget>
 
-
         <GiftedForm.ModalWidget
           title='Biography'
           displayValue='bio'
-
           image={require('../../assets/icons/color/book.png')}
-
           scrollEnabled={true} // true by default
         >
           <GiftedForm.SeparatorWidget/>
+
           <GiftedForm.TextAreaWidget
             name='bio'
-
             autoFocus={true}
-
             placeholder='Something interesting about yourself'
           />
         </GiftedForm.ModalWidget>
 
-
+        <GiftedForm.ErrorsWidget/>
 
         <GiftedForm.SubmitWidget
           title='Sign up'
@@ -263,7 +241,6 @@ var Component = React.createClass({
               */
             }
           }}
-
         />
 
         <GiftedForm.NoticeWidget
@@ -271,7 +248,6 @@ var Component = React.createClass({
         />
 
         <GiftedForm.HiddenWidget name='tos' value={true} />
-
       </GiftedForm>
     );
   }
@@ -331,10 +307,14 @@ AppRegistry.registerComponent('Form', () => Form)
 
 ### Installation
 
-`npm install react-native-gifted-form --save`
-
+```console
+npm install react-native-gifted-form --save
+# OR
+yarn add react-native-gifted-form
+```
 
 ### Available widgets
+
 - TextInputWidget - A text input
 - TextAreaWidget - A text area
 - GooglePlacesWidget - A Google Places picker based on react-native-google-places-autocomplete
@@ -343,6 +323,7 @@ AppRegistry.registerComponent('Form', () => Form)
 - HiddenWidget - A non-displayed widget. The value will be passed to SubmitWidget
 - LoadingWidget - A loader
 - RowWidget - A touchable row with title/image
+- RowValueWidget - A touchable row with title/image and a value
 - SelectCountryWidget - A country picker. Flags made by www.IconDrawer.com
 - SelectWidget - A select menu
 - SeparatorWidget - A 10px widgets separator
@@ -351,20 +332,18 @@ AppRegistry.registerComponent('Form', () => Form)
 - DatePickerIOSWidget - Date picker for iOS
 - NoticeWidget - A notice information - PR wanted for onPress handler
 
+See the [widget sources](https://github.com/FaridSafi/react-native-gifted-form/tree/master/widgets) for full props details.
 
-See the sources for props details
+### Custom widgets
 
-
-### Your own widget
-Widgets must implement the mixin GiftedForm.WidgetMixin - See /widgets/TextAreaWidget.js for example
-
+Widgets must implement the mixin `GiftedForm.WidgetMixin`. See [TextAreaWidget](https://github.com/FaridSafi/react-native-gifted-form/blob/master/widgets/TextAreaWidget.js) for a good example.
 
 ### Contributing
-Pull requests are welcome
 
+Pull requests are welcome! The author is very busy at the moment but there are also some contributors who are also helping out.
 
 ### License
 
 [MIT](LICENSE)
 
-Feel free to ask me questions on Twitter [@FaridSafi](https://www.twitter.com/FaridSafi) !
+Feel free to ask me questions on Twitter [@FaridSafi](https://www.twitter.com/FaridSafi)!

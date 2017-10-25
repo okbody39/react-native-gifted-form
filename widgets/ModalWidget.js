@@ -26,7 +26,8 @@ module.exports = React.createClass({
       disclosure: true,
       cancelable: false,
       displayValue: '',
-      onClose: () => {}
+      onClose: () => {},
+      onCancel: () => {},
     };
   },
 
@@ -36,10 +37,12 @@ module.exports = React.createClass({
     disclosure: React.PropTypes.bool,
     cancelable: React.PropTypes.bool,
     displayValue: React.PropTypes.string,
-    onClose: React.PropTypes.func
+    onClose: React.PropTypes.func,
+    onCancel: React.PropTypes.func
   },
 
   getInitialState() {
+
     return {
       // @todo
       // should be an object with all status
@@ -73,6 +76,7 @@ module.exports = React.createClass({
 
     var route = {
       onClose: _self.onClose,
+      onCancel: _self.onCancel,
       renderScene(navigator) {
         // not passing onFocus/onBlur of the current scene to the new scene
         var {onFocus, onBlur, ...others} = _self.props;
@@ -155,8 +159,24 @@ module.exports = React.createClass({
     }
   },
 
+  componentWillUpdate() {
+
+    // if(this.props.displayValue === "fullName") {
+    //   console.log("........componentWillUpdate : " + this.state.value);
+    //   console.log("........componentWillUpdate-_getDisplayableValue : " + this._getDisplayableValue());
+    // }
+
+    this.oldValue = ( this.state.value == null ? this._getDisplayableValue() : this.state.value );
+
+    // if(this.props.displayValue === "fullName") {
+    //   console.log("........this.oldValue : " + this.oldValue);
+    // }
+
+  },
+
   componentWillMount() {
     this._childrenWithProps = React.Children.map(this.props.children, (child) => {
+
       return React.cloneElement(child, {
         formStyles: this.props.formStyles,
         openModal: this.props.openModal,
@@ -168,6 +188,7 @@ module.exports = React.createClass({
         onValueChange: this.props.onValueChange,
 
         onClose: this.onClose,
+        onCancel: this.onCancel,
       });
     });
   },
@@ -178,16 +199,59 @@ module.exports = React.createClass({
     });
   },
 
+  onCancel() {
+
+    var v = this.props.displayValue;
+    var w = null;
+
+    if (Array.isArray(this.props.children)) {
+      this.props.children.forEach(function (child, index, array) {
+
+        if (child.props.name === v) {
+          //console.log(child);
+          w = child.type.defaultProps.type;
+        }
+
+      });
+    } else {
+      if(this.props.children.props.name === v) {
+        w = this.props.children.type.defaultProps.type;
+      }
+    }
+
+    this.setState({
+      value: this.oldValue,
+    });
+
+    if(w === "TextInputWidget") {
+      GiftedFormManager.stores[this.props.formName].values[this.props.displayValue] = this.oldValue;
+    }
+
+    //console.log("onCancel : "+this.state.value);
+
+  },
+
   onClose(value, navigator = null) {
+
     if (typeof value === 'string') {
       this.setState({
         value: value,
       });
     } else if (this.props.displayValue !== '') {
       this.setState({
-        value: this._getDisplayableValue(),
+        value: this._getDisplayableValue(true),
       });
     }
+
+    // console.log("this._getDisplayableValue() : "+this._getDisplayableValue());
+    setTimeout((value, navigator) => {
+      // console.log("ModalWidget updateValue : ", this.props.formName, this.props.displayValue, this.state.value, this._getDisplayableValue());
+      GiftedFormManager.updateValue(this.props.formName, this.props.displayValue, this.state.value);
+
+    }, 100);
+
+
+
 
     if (navigator !== null) {
       navigator.pop();
@@ -202,7 +266,28 @@ module.exports = React.createClass({
     });
   },
 
-  _getDisplayableValue() {
+  _getDisplayableValue(isClose) {
+
+    if(isClose) {
+
+      var vv = GiftedFormManager.getValues(this.props.formName);
+
+      if(Array.isArray(vv[this.props.displayValue])) {
+        return vv[this.props.displayValue].join(', ');
+      }
+
+      //console.log("TTTTTTTTT : " + this.props.displayValue)
+      //console.log(GiftedFormManager.stores[this.props.formName]);
+      //console.log("TTTTTTTTT : " + GiftedFormManager.stores[this.props.formName].values[this.props.displayValue]);
+      // console.log("==============================");
+      //
+      // console.log("GiftedFormManager.getValues: ", vv[this.props.displayValue]);
+      // console.log("GiftedFormManager.stores[this.props.formName].values[this.props.displayValue]: ", GiftedFormManager.stores[this.props.formName].values[this.props.displayValue]);
+      // console.log("==============================");
+    }
+
+
+
     if (this.props.displayValue !== '') {
       if (typeof GiftedFormManager.stores[this.props.formName] !== 'undefined') {
         if (typeof GiftedFormManager.stores[this.props.formName].values !== 'undefined') {
@@ -220,6 +305,17 @@ module.exports = React.createClass({
             }
             if (typeof GiftedFormManager.stores[this.props.formName].values[this.props.displayValue] === 'string') {
               return GiftedFormManager.stores[this.props.formName].values[this.props.displayValue].trim();
+            } else if (Array.isArray(GiftedFormManager.stores[this.props.formName].values[this.props.displayValue])) {
+              var values = GiftedFormManager.getValues(this.props.formName);
+
+              //console.log("Modal", values[this.props.displayValue]);
+              // vals.map((v) => {
+              //   console.log(this.props.displayValue, v);
+              //   // if()
+              //   // return v;
+              // });
+
+              return values[this.props.displayValue].join(', ');
             }
           } else {
             // @todo merge with when not select menu
@@ -236,6 +332,7 @@ module.exports = React.createClass({
                   if (Array.isArray(values[this.props.displayValue])) {
                     // @todo
                     // should return the title and not the value in case of select menu
+                    //console.log("Modal#2", values[this.props.displayValue]);
                     return values[this.props.displayValue].join(', ');
                   } else if (values[this.props.displayValue] instanceof Date) {
                     return moment(values[this.props.displayValue]).calendar(null, {
@@ -246,6 +343,7 @@ module.exports = React.createClass({
                       lastWeek: '[Last] dddd'
                     });
                   } else {
+                    //console.log("Modal#3", values[this.props.displayValue]);
                     return values[this.props.displayValue];
                   }
                 }
@@ -276,7 +374,7 @@ module.exports = React.createClass({
           {this._renderImage()}
           <Text numberOfLines={1} style={this.getStyle('modalTitle')}>{this.props.title}</Text>
           <View style={this.getStyle('alignRight')}>
-            <Text numberOfLines={1} style={this.getStyle('modalValue')}>{this.state.value}</Text>
+            <Text numberOfLines={1} style={[this.getStyle('modalValue'),{marginRight: this.props.disclosure ? 10 : 15,}]}>{this.state.value}</Text>
           </View>
           {this.renderDisclosure()}
         </View>
@@ -303,7 +401,7 @@ module.exports = React.createClass({
     },
     disclosure: {
       // transform: [{rotate: '90deg'}],
-      marginLeft: 10,
+      //marginLeft: 10,
       marginRight: 10,
       width: 11,
     },
@@ -316,6 +414,7 @@ module.exports = React.createClass({
     alignRight: {
       alignItems: 'flex-end',
       // width: 110,
+      // marginRight: 10,
     },
     modalValue: {
       fontSize: 15,

@@ -138,13 +138,30 @@ module.exports = {
   },
 
   _setValue(value) {
+
+    // console.log('WidgetMix _setValue: ', this.props.formName, this.props.name, value);
+
     this.setState({
       value: value
     });
+
     GiftedFormManager.updateValue(this.props.formName, this.props.name, value);
+
+    // // SelectWidget
+    // if(this.props.name.indexOf("{") != -1) {
+    //   if(value) {
+    //     GiftedFormManager.updateValue(this.props.formName, this.props.name, value);
+    //   } else {
+    //
+    //   }
+    // }
+
+
+
   },
 
   _onChange(value, onChangeText = true) {
+
     if (onChangeText === true) {
       //should maintain similar API to core TextInput component
       this.props.onChangeText && this.props.onChangeText(value);

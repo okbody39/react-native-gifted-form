@@ -20,6 +20,12 @@ module.exports = React.createClass({
       type: 'OptionWidget',
     });
   },
+
+  getInitialState() {
+    return {
+      value: this.props.value,
+    };
+  },
   
   _renderCheckmark() {
     if (this.state.value === true) {
@@ -39,16 +45,22 @@ module.exports = React.createClass({
       this.props.unSelectAll();
       this._onChange(true);
       
-      if (typeof this.props.onSelect === 'function') {
-        // console.log('onSelect');
-        this.props.onSelect(this.props.value);
-      }
-      
+      // if (typeof this.props.onSelect === 'function') {
+      //   //console.log('onSelect:', this.props.value);
+      //   this.props.onSelect(this.props.value);
+      //   //this.props.onClose(this.props.value, this.props.navigator)
+      // }
+
       if (typeof this.props.onClose === 'function') {
         this.props.onClose(this.props.title, this.props.navigator);
+        //this.props.onClose(this.props.value, this.props.navigator)
+        //console.log(this.props.navigator);
       }
+
     } else {
+      //console.log("OptionWidget _onClose: ", this.state.value);
       this._onChange(!this.state.value)
+
     }
   },
   

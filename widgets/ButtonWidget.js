@@ -16,23 +16,17 @@ module.exports = React.createClass({
 
   getDefaultProps() {
     return {
-      type: 'SubmitWidget',
-      onSubmit: () => {},
-      preSubmit: () => {},
+      type: 'ButtonWidget',
+      onPress: () => {},
       isDisabled: false,
       activityIndicatorColor: 'black',
-      requiredMessage: '{TITLE} is required',
-      notValidMessage: '{TITLE} is not valid',
-    };
+      };
   },
 
   propTypes: {
-    onSubmit: React.PropTypes.func,
-    preSubmit: React.PropTypes.func,
+    onPress: React.PropTypes.func,
     isDisabled: React.PropTypes.bool,
     activityIndicatorColor: React.PropTypes.string,
-    requiredMessage: React.PropTypes.string,
-    notValidMessage: React.PropTypes.string,
   },
 
   getInitialState() {
@@ -45,36 +39,8 @@ module.exports = React.createClass({
     this.props.form.setState({errors: []});
   },
 
-  _postSubmit(errors = []) {
-    errors = !Array.isArray(errors) ? [errors] : errors;
-
-    this.setState({
-      isLoading: false,
-    });
-    this.props.form.setState({errors});
-  },
-
-  _doSubmit() {
-    this.props.preSubmit();
-
-    this.clearValidationErrors()
-    var validationResults = GiftedFormManager.validate(this.props.formName);
-    var values = GiftedFormManager.getValues(this.props.formName);
-
-    if (validationResults.isValid === true) {
-      this.setState({
-        isLoading: true,
-      });
-      this.props.onSubmit(true, values, validationResults, this._postSubmit, this.props.navigator);
-    } else {
-      var errors = GiftedFormManager.getValidationErrors(
-        validationResults,
-        this.props.notValidMessage,
-        this.props.requiredMesage
-      );
-      this.props.form.setState({errors: errors});
-      this.props.onSubmit(false, values, validationResults, this._postSubmit, this.props.navigator);
-    }
+  _doPress() {
+    this.props.onPress();
   },
 
   render() {
@@ -92,7 +58,7 @@ module.exports = React.createClass({
 
           {...this.props}
 
-          onPress={() => this._doSubmit()}
+          onPress={() => this._doPress()}
         >
           {this.props.title}
         </Button>
@@ -102,7 +68,8 @@ module.exports = React.createClass({
 
   defaultStyles: {
     submitButton: {
-      margin: 10,
+      marginLeft: 10,
+      marginRight: 10,
       backgroundColor: '#3498db',
       borderWidth: 0,
       borderRadius: 0,

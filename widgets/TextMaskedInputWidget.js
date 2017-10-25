@@ -5,7 +5,7 @@ var {
   TextInput,
   PixelRatio
 } = require('react-native')
-
+var {TextInputMask} = require('react-native-masked-text');
 var WidgetMixin = require('../mixins/WidgetMixin.js');
 
 
@@ -16,7 +16,7 @@ module.exports = React.createClass({
     return {
       inline: true,
       // @todo type avec suffix Widget pour all
-      type: 'TextInputWidget',
+      type: 'TextMaskedInputWidget',
       underlined: false,
       onTextInputFocus: (value) => value,
       onTextInputBlur: (value) => value
@@ -55,7 +55,7 @@ module.exports = React.createClass({
             <Text numberOfLines={1} style={this.getStyle(['textInputTitle'])}>{this.props.title}</Text>
           </View>
           
-          <TextInput
+          <TextInputMask
             ref='input'
             style={this.getStyle(['textInput'])}
           
@@ -78,7 +78,7 @@ module.exports = React.createClass({
         <View style={this.getStyle(['row'])}>
           {this._renderImage()}
           {this._renderTitle()}
-          <TextInput
+          <TextInputMask
             ref='input'
             style={this.getStyle(['textInputInline'])}
 

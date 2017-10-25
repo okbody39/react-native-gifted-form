@@ -7,17 +7,17 @@ var {GooglePlacesAutocomplete} = require('react-native-google-places-autocomplet
 
 module.exports = React.createClass({
   mixins: [WidgetMixin],
-  
+
   getDefaultProps() {
     return {
       type: 'GooglePlacesWidget',
     };
   },
-  
+
   render() {
     const everywhere = {description: 'Everywhere', geometry: { location: { lat: 0, lng: 0 } }};
-    
-    
+
+
     return (
       <GooglePlacesAutocomplete
         placeholder='Type a city name'
@@ -25,13 +25,22 @@ module.exports = React.createClass({
         autoFocus={false}
         fetchDetails={true}
         onPress={(data, details = {}) => { // details is provided when fetchDetails = true
+
+          // console.log("========================================================");
+          // console.log(data);
+          // console.log("--------------------------------------------------------");
           // console.log(details);
-          this._onChange({
-            name: details.formatted_address,
-            placeId: details.place_id,
-            loc: [details.geometry.location.lng, details.geometry.location.lat],
-            types: details.types
-          });
+          // console.log("========================================================");
+
+          // this._onChange({
+          //   name: details.formatted_address,
+          //   placeId: details.place_id,
+          //   details: details,
+          //   loc: [details.geometry.location.lng, details.geometry.location.lat],
+          //   types: details.types
+          // });
+
+          this._onChange(details.formatted_address.replace("대한민국 ", "") + " " + details.name);
           this.props.onClose(details.formatted_address, this.props.navigator);
         }}
         getDefaultValue={() => {
@@ -46,7 +55,7 @@ module.exports = React.createClass({
             color: '#1faadb',
           },
         }}
-        
+
         currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
         currentLocationLabel="Current location"
         currentLocationAPI='GoogleReverseGeocoding' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
@@ -58,13 +67,13 @@ module.exports = React.createClass({
           rankby: 'distance',
           types: 'food',
         }}
-        
-        
+
+        enablePoweredByContainer={false}
         filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-        
+
         // predefinedPlaces={[everywhere]}
-        
-        
+
+
         {...this.props} // @todo test sans (need for 'name')
       />
     );

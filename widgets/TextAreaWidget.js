@@ -36,11 +36,11 @@ module.exports = React.createClass({
   
   defaultStyles: {
     textAreaRow: {
-      backgroundColor: '#FFF',
+      backgroundColor: 'white',
       height: 120,
       borderBottomWidth: 1 / PixelRatio.get(),
       borderColor: '#c8c7cc',
-      alignItems: 'center',
+      //alignItems: 'center',
       paddingLeft: 10,
       paddingRight: 10,
     },
