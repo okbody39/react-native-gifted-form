@@ -374,7 +374,7 @@ module.exports = React.createClass({
           {this._renderImage()}
           <Text numberOfLines={1} style={this.getStyle('modalTitle')}>{this.props.title}</Text>
           <View style={this.getStyle('alignRight')}>
-            <Text numberOfLines={1} style={[this.getStyle('modalValue'),{marginRight: this.props.disclosure ? 10 : 15,}]}>{this.state.value}</Text>
+            <Text numberOfLines={1} ellipsizeMode='tail' style={[this.getStyle('modalValue'),{marginRight: this.props.disclosure ? 10 : 15,}]}>{this.state.value}</Text>
           </View>
           {this.renderDisclosure()}
         </View>
@@ -413,7 +413,7 @@ module.exports = React.createClass({
     },
     alignRight: {
       alignItems: 'flex-end',
-      // width: 110,
+      width: 250,
       // marginRight: 10,
     },
     modalValue: {

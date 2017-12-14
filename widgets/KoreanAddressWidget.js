@@ -9,7 +9,7 @@ var {
   TouchableOpacity,
 } = require('react-native')
 
-const parseString = require('react-native-xml2js').parseString;
+// const parseString = require('react-native-xml2js').parseString;
 var WidgetMixin = require('../mixins/WidgetMixin.js');
 
 const defaultStyles = {
